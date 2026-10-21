@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Uran Member Card Editor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .instructions {
+            color: #94a3b8;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .instructions span {
+            color: #38bdf8;
+            font-weight: 600;
+        }
+
+        .cards-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Common Card Styles */
+        .card {
+            width: 350px;
+            height: 540px;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Editable visual cue */
+        [contenteditable="true"]:hover {
+            outline: 1px dashed rgba(56, 189, 248, 0.6);
+            cursor: text;
+        }
+
+        /* --- FRONT CARD --- */
+        .card-front {
+            background: #f8fafc;
+        }
+
+        .card-front .header-bg {
+            background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%);
+            height: 140px;
+            padding: 20px;
+            position: relative;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container {
+            width: 65px;
+            height: 65px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .org-titles h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .org-titles .urdu-title {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .org-titles p {
+            font-size: 10px;
+            color: #cbd5e1;
+            margin-top: 4px;
+            line-height: 1.2;
+        }
+
+        /* Curved transition wave */
+        .wave-bar {
+            height: 15px;
+            background: #ffffff;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            margin-top: -15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-body {
+            padding: 10px 25px 20px 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-tag {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+
+        .profile-section {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .photo-box {
+            width: 100px;
+            height: 125px;
+            border-radius: 8px;
+            background: #cbd5e1;
+            overflow: hidden;
+            border: 2px solid #e2e8f0;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .info-field label {
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .info-field .value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 2px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 12px;
+        }
+
+        .footer-quote {
+            font-size: 8px;
+            color: #475569;
+            font-weight: 600;
+            line-height: 1.3;
+            max-width: 140px;
+            text-transform: uppercase;
+        }
+
+        .footer-signature {
+            text-align: right;
+        }
+
+        .footer-signature .sig-name {
+            font-family: cursive;
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .footer-signature .sig-urdu {
+            font-size: 12px;
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        /* --- BACK CARD --- */
+        .card-back {
+            background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%);
+            color: white;
+            padding: 30px;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+        }
+
+        .back-logo {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .back-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .back-slogan {
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin: 10px 0;
+        }
+
+        .divider {
+            width: 80px;
+            height: 2px;
+            background: #d97706;
+            margin: 0 auto;
+        }
+
+        .qr-box {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+        }
+
+        .qr-box img {
+            width: 110px;
+            height: 110px;
+            display: block;
+        }
+
+        .qr-text {
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: #cbd5e1;
+            margin-top: 8px;
+            text-transform: uppercase;
+        }
+
+        .back-contact {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-contact span {
+            color: #d97706;
+        }
+
+        /* Controls */
+        .controls {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            background: #0284c7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #0369a1;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instructions">
+        💡 <span>Click any text</span> on the card to edit details directly, or use the buttons below to upload your photo or change the logo.
+    </div>
+
+    <div class="cards-container">
+        <!-- FRONT OF CARD -->
+        <div class="card card-front">
+            <div class="header-bg">
+                <div class="logo-container">
+                    <!-- Pre-loaded logo image source -->
+                    <img id="logo-img-front" src="file_00000000886482119efdc74a9f872ecd.png" alt="Students Uran Logo">
+                </div>
+                <div class="org-titles">
+                    <h1 contenteditable="true">Students Uran</h1>
+                    <div class="urdu-title" contenteditable="true">اڑان</div>
+                    <p>Discover Universities | Find Scholarships<br>Build Your Future</p>
+                </div>
+            </div>
+            <div class="wave-bar"></div>
+            
+            <div class="card-body">
+                <div>
+                    <div class="card-tag">MEMBER CARD</div>
+                    <div class="profile-section">
+                        <div class="photo-box" id="photo-container">
+                            <img id="member-photo" src="https://api.iconify.design/lucide:user.svg?color=%2364748b" alt="Member Photo" style="padding: 25px; width: 100%; height: 100%; background: #e2e8f0;">
+                        </div>
+                        <div class="info-group">
+                            <div class="info-field">
+                                <label>Name</label>
+                                <div class="value" contenteditable="true">Neeaz Ahmad</div>
+                            </div>
+                            <div class="info-field">
+                                <label>Member ID</label>
+                                <div class="value" contenteditable="true">SU-2026-001</div>
+                            </div>
+                            <div class="info-field">
+                                <label>Join Date</label>
+                                <div class="value" contenteditable="true">Oct 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="footer-quote" contenteditable="true">
+                        Together Towards<br>A Brighter Future
+                    </div>
+                    <div class="footer-signature">
+                        <div class="sig-name" contenteditable="true">Students Uran</div>
+                        <div class="sig-urdu" contenteditable="true">اڑان</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BACK OF CARD -->
+        <div class="card card-back">
+            <div class="back-logo">
+                <!-- Pre-loaded logo image source -->
+                <img id="logo-img-back" src="file_00000000886482119efdc74a9f872ecd.png" alt="Students Uran Logo">
+            </div>
+            
+            <div>
+                <div class="back-slogan" contenteditable="true">More Opportunities<br>Bigger Dreams Together</div>
+                <div class="divider"></div>
+            </div>
+
+            <div class="qr-box">
+                <img src="https://api.iconify.design/lucide:qr-code.svg?color=%230f172a" alt="QR Code" style="padding: 10px;">
+            </div>
+            <div class="qr-text" contenteditable="true">Scan to visit our website</div>
+
+            <div class="back-contact">
+                <span>✉</span> <div contenteditable="true" style="display:inline-block;">studentsuran@gmail.com</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Controls -->
+    <div class="controls">
+        <input type="file" id="logo-input" accept="image/*">
+        <input type="file" id="photo-input" accept="image/*">
+        <button class="btn" onclick="document.getElementById('logo-input').click()">🖼️ Change Logo</button>
+        <button class="btn" onclick="document.getElementById('photo-input').click()">📷 Upload Photo</button>
+        <button class="btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+    </div>
+
+    <script>
+        // Handle Logo Upload (Updates both front and back logos if needed)
+        const logoInput = document.getElementById('logo-input');
+        const logoImgFront = document.getElementById('logo-img-front');
+        const logoImgBack = document.getElementById('logo-img-back');
+
+        logoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoImgFront.src = e.target.result;
+                    logoImgBack.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Handle Member Photo Upload
+        const photoInput = document.getElementById('photo-input');
+        const memberPhoto = document.getElementById('member-photo');
+
+        photoInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    memberPhoto.src = e.target.result;
+                    memberPhoto.style.padding = '0';
+                    memberPhoto.style.background = 'transparent';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
