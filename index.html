@@ -11,6 +11,9 @@
             margin: 0;
             padding: 0;
             font-family: 'Inter', sans-serif;
+            /* Force browsers to print background colors and images */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         body {
@@ -53,6 +56,8 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         /* Editable visual cue */
@@ -63,11 +68,11 @@
 
         /* --- FRONT CARD --- */
         .card-front {
-            background: #f8fafc;
+            background: #f8fafc !important;
         }
 
         .card-front .header-bg {
-            background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%);
+            background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%) !important;
             height: 140px;
             padding: 20px;
             position: relative;
@@ -114,10 +119,9 @@
             line-height: 1.2;
         }
 
-        /* Curved transition wave */
         .wave-bar {
             height: 15px;
-            background: #ffffff;
+            background: #ffffff !important;
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
             margin-top: -15px;
@@ -221,7 +225,7 @@
 
         /* --- BACK CARD --- */
         .card-back {
-            background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%);
+            background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%) !important;
             color: white;
             padding: 30px;
             align-items: center;
@@ -327,6 +331,26 @@
         input[type="file"] {
             display: none;
         }
+
+        /* PRINT STYLES - Fixes missing backgrounds and page splits */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0;
+            }
+            .instructions, .controls {
+                display: none !important;
+            }
+            .cards-container {
+                gap: 20px;
+                transform: scale(0.95);
+                transform-origin: top center;
+            }
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -340,7 +364,6 @@
         <div class="card card-front">
             <div class="header-bg">
                 <div class="logo-container">
-                    <!-- Pre-loaded logo image source -->
                     <img id="logo-img-front" src="file_00000000886482119efdc74a9f872ecd.png" alt="Students Uran Logo">
                 </div>
                 <div class="org-titles">
@@ -390,7 +413,6 @@
         <!-- BACK OF CARD -->
         <div class="card card-back">
             <div class="back-logo">
-                <!-- Pre-loaded logo image source -->
                 <img id="logo-img-back" src="file_00000000886482119efdc74a9f872ecd.png" alt="Students Uran Logo">
             </div>
             
@@ -420,7 +442,6 @@
     </div>
 
     <script>
-        // Handle Logo Upload (Updates both front and back logos if needed)
         const logoInput = document.getElementById('logo-input');
         const logoImgFront = document.getElementById('logo-img-front');
         const logoImgBack = document.getElementById('logo-img-back');
@@ -437,7 +458,6 @@
             }
         });
 
-        // Handle Member Photo Upload
         const photoInput = document.getElementById('photo-input');
         const memberPhoto = document.getElementById('member-photo');
 
